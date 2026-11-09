@@ -1,4 +1,4 @@
-import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, FileTypeValidator, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
 import type { Express } from 'express';
@@ -12,9 +12,19 @@ export class FilesController {
   @Post('product')
   @UseInterceptors( FileInterceptor('file'))
   uploadProductImage(
-    @UploadedFile() file: Express.Multer.File
-  ) {
-    return file;
-  } 
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpg|gif)' }),
+        ],
+        errorHttpStatusCode: 400,
+      }),
+    )
+    file: Express.Multer.File,
+  ){
+    return {
+      fileName: file.originalname
+    }
+  }
   
 }
