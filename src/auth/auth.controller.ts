@@ -47,5 +47,16 @@ export class AuthController {
   ){
     return 'test2'
   }
+
+  @Get('private3')
+  @UseGuards(AuthGuard(), UserRoleGuard)
+  privateRoute3(
+    @GetUser() user: User
+  ){
+    return {
+      ok : true, 
+      user
+    }
+  }
 }
  
