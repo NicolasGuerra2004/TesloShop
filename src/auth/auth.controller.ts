@@ -6,6 +6,8 @@ import { CreateUserDto , LoginUserDto } from './dto';
 import { GetUser , RawHeaders } from './decorators';
 import { User } from './entities/user.entity';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
+import { Auth } from './decorators/auth.decorator';
+import { ValidRoles } from './interfaces';
 
 
 
@@ -49,7 +51,7 @@ export class AuthController {
   }
 
   @Get('private3')
-  @UseGuards(AuthGuard(), UserRoleGuard)
+  @Auth(ValidRoles.superUser)
   privateRoute3(
     @GetUser() user: User
   ){
